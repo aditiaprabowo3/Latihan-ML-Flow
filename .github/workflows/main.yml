@@ -67,9 +67,10 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Tag the Docker image
       - name: Tag Docker image
-        run: docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+        run: |
+          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+
 
       # Push Docker image to Docker Hub
       - name: Push Docker Image
