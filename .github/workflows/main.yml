@@ -17,33 +17,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
       - uses: actions/checkout@v3
 
-      # Setup Python
       - name: Set up Python 3.12.7
         uses: actions/setup-python@v4
         with:
           python-version: "3.12.7"
 
-      # Cek env
       - name: Check Env
         run: |
           echo "CSV_URL: $CSV_URL"
           echo "TARGET_VAR: $TARGET_VAR"
 
-      # Install MLflow
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install mlflow
 
-      # Jalankan MLflow Project
       - name: Run MLflow project
         run: |
-            mlflow run MLproject --env-manager=local
+          mlflow run MLproject --env-manager=local
 
-      # Ambil RUN_ID terakhir
       - name: Get latest MLflow run_id
         id: get_run_id
         run: |
@@ -51,35 +45,37 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest RUN_ID: $RUN_ID"
 
-      # Debug: list model folder
       - name: List model path
         run: |
           echo "Checking model path: mlruns/0/${RUN_ID}/artifacts/model"
-          ls -R mlruns/0/${RUN_ID}/artifacts/model || echo "Model path not found"
+          if [ -d "mlruns/0/${RUN_ID}/artifacts/model" ]; then
+            ls -R mlruns/0/${RUN_ID}/artifacts/model
+          else
+            echo "Model not found"; exit 1
+          fi
 
-      # Build Docker dari model
       - name: Build Docker Model
         run: |
           echo "Using RUN_ID: $RUN_ID"
           mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name cc
 
-      # Cek Docker image
       - name: Debug docker image
         run: docker images | grep cc || echo "Docker image 'cc' not found"
 
-      # Login ke Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Tag Docker image
       - name: Tag Docker Image
         run: |
-          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          if docker images | grep -q cc; then
+            docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          else
+            echo "Image cc not found, tagging skipped"; exit 1
+          fi
 
-      # Push Docker image ke Docker Hub
       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
