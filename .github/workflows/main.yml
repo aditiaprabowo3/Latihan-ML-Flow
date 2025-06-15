@@ -41,7 +41,7 @@ jobs:
       # Jalankan MLflow Project
       - name: Run MLflow project
         run: |
-          mlflow run . --env-manager=local
+            mlflow run MLproject --env-manager=local
 
       # Ambil RUN_ID terakhir
       - name: Get latest MLflow run_id
