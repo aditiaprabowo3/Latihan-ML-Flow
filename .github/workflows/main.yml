@@ -51,7 +51,7 @@ jobs:
       # Build Docker Model
       - name: Build Docker Model
         run: |
-          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --build-image cc
+          mlflow models build-docker --model-uri runs:/$RUN_ID/model
   
       - name: List Docker Images
         run: docker images
