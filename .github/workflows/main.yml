@@ -30,6 +30,7 @@ jobs:
       - name: Check Env
         run: |
           echo $CSV_URL
+          
       # Install mlflow
       - name: Install dependencies
         run: |
@@ -55,10 +56,10 @@ jobs:
           
       - name: List Docker Images
         run: docker images
-      
+        
       - name: Tag Docker Image
         run: |
-          docker tag mlflow-temp-model ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
