@@ -51,14 +51,14 @@ jobs:
       # Build Docker Model
       - name: Build Docker Image
         run: |
-          mlflow models build-docker --model-uri runs:/$RUN_ID/model
-    
-      - name: List Docker Images (Cek apakah image berhasil dibuat)
+          mlflow models build-docker --model-uri runs:/$RUN_ID/model --name cc
+          
+      - name: List Docker Images
         run: docker images
       
       - name: Tag Docker Image
         run: |
-          docker tag mlflow-temp-model aditiaprabowo/cc:latest
+          docker tag mlflow-temp-model ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
