@@ -58,7 +58,7 @@ jobs:
 
       - name: Tag Docker Image
         run: |
-          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          docker tag model-$RUN_ID ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
