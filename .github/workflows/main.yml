@@ -51,14 +51,14 @@ jobs:
       # Build Docker Model
       - name: Build Docker Model
         run: |
-          mlflow models build-docker --model-uri runs:/$RUN_ID/model
+          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc"
   
       - name: List Docker Images
         run: docker images
 
       - name: Tag Docker Image
         run: |
-          docker tag model-$RUN_ID ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
@@ -68,6 +68,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       # Push Docker image to Docker Hub
-      - name: Push Docker Image
+       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
