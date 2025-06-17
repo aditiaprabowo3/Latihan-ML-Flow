@@ -30,16 +30,17 @@ jobs:
       - name: Check Env
         run: |
           echo $CSV_URL
+          
       # Install mlflow
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mlflow  
+          pip install mlflow 
           
       # Run as a mlflow project
       - name: Run mlflow project
         run: |
-          mlflow run MLproject --env-manager=local 
+          mlflow run MLproject --env-manager=local
       
       # Get latest run_id
       - name: Get latest MLflow run_id
@@ -51,7 +52,7 @@ jobs:
       # Build Docker Model
       - name: Build Docker Model
         run: |
-          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc" 
+          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc"
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
